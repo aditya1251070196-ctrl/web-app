@@ -1,9 +1,9 @@
 // Register service worker (optional for caching other assets)
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js");
-    .then(() => console.log("Service Worker registered"));
+  navigator.serviceWorker.register("service-worker.js")
+    .then(() => console.log("Service Worker registered"))
+    .catch(err => console.error("Service Worker registration failed:", err));
 }
-
 tf.env().set('WEBGL_DELETE_TEXTURE_THRESHOLD', 0);
 
 let model = null;
