@@ -1,5 +1,4 @@
 const CACHE_NAME = 'traffic-sign-pwa-v2';
-
 const ASSETS = [
   './',
   './index.html',
@@ -8,10 +7,8 @@ const ASSETS = [
   './manifest.json',
   './service-worker.js',
   './tf.min.js',
-
   './icons/icon-192.png',
   './icons/icon-512.png',
-
   './model/model.json',
   './model/traffic_sign_model.weights.bin',
   './model/labels.json'
@@ -19,10 +16,17 @@ const ASSETS = [
 
 // INSTALL
 self.addEventListener('install', event => {
+  console.log('[SW] Installing...');
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      console.log('[SW] Caching assets');
-      return cache.addAll(ASSETS);
+    caches.open(CACHE_NAME).then(async cache => {
+      for (const asset of ASSETS) {
+        try {
+          await cache.add(asset);
+          console.log('[SW] Cached:', asset);
+        } catch (err) {
+          console.warn('[SW] Failed to cache:', asset, err);
+        }
+      }
     })
   );
   self.skipWaiting();
@@ -30,6 +34,7 @@ self.addEventListener('install', event => {
 
 // ACTIVATE
 self.addEventListener('activate', event => {
+  console.log('[SW] Activating...');
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
@@ -45,19 +50,30 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// FETCH
+// FETCH: cache-first strategy
 self.addEventListener('fetch', event => {
   event.respondWith(
-  caches.match(event.request).then(cached => {
-    return cached || fetch(event.request).then(response => {
-      // Optionally cache new requests
-      return response;
-    });
-  })
-);
+    caches.match(event.request).then(cached => {
+      if (cached) return cached;
+
+      return fetch(event.request)
+        .then(networkResponse => {
+          // Cache the new response dynamically
+          return caches.open(CACHE_NAME).then(cache => {
+            try {
+              cache.put(event.request, networkResponse.clone());
+            } catch (err) {
+              console.warn('[SW] Failed to cache dynamically:', event.request.url, err);
+            }
+            return networkResponse;
+          });
+        })
+        .catch(() => {
+          // Optional fallback for documents
+          if (event.request.destination === 'document') {
+            return caches.match('./index.html');
+          }
+        });
+    })
+  );
 });
-
-// pwa-cache-v2
-
-
-
