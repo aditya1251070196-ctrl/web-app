@@ -1,6 +1,6 @@
 // Register service worker (optional for caching other assets)
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./service-worker.js")
+  navigator.serviceWorker.register("service-worker.js");
     .then(() => console.log("Service Worker registered"));
 }
 
