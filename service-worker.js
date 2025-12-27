@@ -54,3 +54,7 @@ self.addEventListener('fetch', event => {
     })
   );
 });
+
+// pwa-cache-v2
+
+
