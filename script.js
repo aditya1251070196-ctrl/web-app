@@ -12,12 +12,11 @@ let model = null;
 // Load model (always fresh, no browser cache)
 // =====================================================
 async function loadModel() {
-  model = await tf.loadLayersModel("model/model.json", {
-    requestInit: { cache: "no-store" }
-  });
-  console.log("Model Loaded (no cache)");
+  model = await tf.loadLayersModel("./model/model.json");
+  console.log("Model Loaded");
   return model;
 }
+
 
 // =====================================================
 // Handle image preview (file upload)
@@ -75,8 +74,9 @@ async function runPrediction(imgElement) {
   const maxScore = Math.max(...dataArr);
   const index = dataArr.indexOf(maxScore);
 
-  const labelsResponse = await fetch("model/labels.json", { cache: "no-store" });
-  const labels = await labelsResponse.json();
+  const labelsResponse = await fetch("./model/labels.json");
+const labels = await labelsResponse.json();
+
 
   const threshold = 0.6;
   let predictionText;
