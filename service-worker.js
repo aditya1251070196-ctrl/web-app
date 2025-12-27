@@ -1,12 +1,13 @@
-const CACHE_NAME = 'traffic-sign-pwa-v2';
+const CACHE_NAME = 'traffic-sign-cache-v1';
+
 const ASSETS = [
-  './',
+  './',                       // index.html
   './index.html',
   './style.css',
   './script.js',
   './manifest.json',
   './service-worker.js',
-  './tf.min.js',
+  './tf.min.js',               // include if you have it in root
   './icons/icon-192.png',
   './icons/icon-512.png',
   './model/model.json',
@@ -14,7 +15,7 @@ const ASSETS = [
   './model/labels.json'
 ];
 
-// INSTALL
+// INSTALL: cache all assets safely
 self.addEventListener('install', event => {
   console.log('[SW] Installing...');
   event.waitUntil(
@@ -32,7 +33,7 @@ self.addEventListener('install', event => {
   self.skipWaiting();
 });
 
-// ACTIVATE
+// ACTIVATE: remove old caches
 self.addEventListener('activate', event => {
   console.log('[SW] Activating...');
   event.waitUntil(
@@ -58,7 +59,7 @@ self.addEventListener('fetch', event => {
 
       return fetch(event.request)
         .then(networkResponse => {
-          // Cache the new response dynamically
+          // Cache dynamically fetched files
           return caches.open(CACHE_NAME).then(cache => {
             try {
               cache.put(event.request, networkResponse.clone());
