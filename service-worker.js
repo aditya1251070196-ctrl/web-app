@@ -48,13 +48,16 @@ self.addEventListener('activate', event => {
 // FETCH
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request).then(cached => {
-      if (cached) return cached;
-      return fetch(event.request);
-    })
-  );
+  caches.match(event.request).then(cached => {
+    return cached || fetch(event.request).then(response => {
+      // Optionally cache new requests
+      return response;
+    });
+  })
+);
 });
 
 // pwa-cache-v2
+
 
 
