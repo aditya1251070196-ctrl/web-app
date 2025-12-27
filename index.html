@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Traffic Sign Detector</title>
+ <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.13.0/dist/tf.min.js"></script>
+ <link rel="manifest" href="manifest.json">
+ 
+
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Traffic Sign Detector</h1>
+
+  <div class="container">
+
+    <!-- Camera Section -->
+<!-- Camera controls -->
+
+
+
+  <video id="video" width="320" height="240" autoplay></video>
+
+
+<canvas id="canvas" width="320" height="240" style="display:none;"></canvas><br>
+
+
+<button onclick="startCamera()">Start Camera</button>
+<button onclick="captureImage()">Capture</button>
+
+<br><br>
+
+
+    <input type="file" id="imageInput" accept="image/*" /> <br>
+    
+
+    <label for="imageInput" class="upload-label">Choose Image</label><br>
+    
+    <img id="preview" />
+
+    <br><button onclick="predict()">Detect</button>
+
+   <div> <h2 id="result">Prediction: </h2>  </div>
+
+   
+<button onclick="stopCamera()">Stop Camera</button>
+<button onclick="refreshPage()">Refresh</button>
+
+
+
+  </div>
+
+
+  
+
+
+
+  <script src="script.js"></script>
+</body>
+
+</html>
